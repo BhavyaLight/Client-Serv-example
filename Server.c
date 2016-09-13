@@ -26,7 +26,7 @@ void *createConnection(void *newsockfd){
 
 int main(int argc, char *argv[])
 { 
-int sockfd, newsockfd, port, clilen, pid;
+int sockfd, newsockfd, port, clilen, pid, pidb, pidc;
 struct sockaddr_in serv_addr, cli_addr;
 
 if (argc < 2)
@@ -48,20 +48,20 @@ error("ERROR binding to socket");
 listen(sockfd,2);
 clilen = sizeof(cli_addr);
 
-while (1) {
- 	newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen);
-	if (newsockfd < 0) error("ERROR on accept");
-	pid = fork();
- 	if (pid < 0)
-     	error("ERROR on fork");
- 	if (pid == 0)  {
-     	close(sockfd);
-     	createConnection(newsockfd);
-     	exit(0);
-	 }
- else 
- 	close(newsockfd);
-}   /* end of while */
+pid = fork();
+if(pid < 0)
+	error("ERROR on fork");
+//Create 3 child processes
+if (pid==0){
+	pidd=fork();
+}
+
+newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen);
+if (newsockfd < 0) error("ERROR on accept");
+close(sockfd);
+createConnection(newsockfd);
+exit(0);
+
 return 0;
 }
 
