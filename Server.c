@@ -49,18 +49,13 @@ error("ERROR binding to socket");
 listen(sockfd,2);
 clilen = sizeof(cli_addr);
 
-<<<<<<< HEAD
+\
 // while( (newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen)) )
 // {
 	newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen);
     if (newsockfd < 0) error("ERROR on accept");
 
     // printf("Connection accepted");
-=======
-while( (newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen)) )
-{
-    printf("Connection accepted");
->>>>>>> 71fa4833eaa1dc65e97756e3751801a8dbe13009
      
     pthread_t sniffer_thread;
      
@@ -71,19 +66,8 @@ while( (newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen)) )
     }
      
     pthread_join( sniffer_thread , NULL);
-<<<<<<< HEAD
+
 // }
-
-
-
-=======
-}
-
-
-if (newsockfd < 0) error("ERROR on accept");
->>>>>>> 71fa4833eaa1dc65e97756e3751801a8dbe13009
-
-
 return 0;
 }
 
