@@ -11,23 +11,22 @@ perror(m);
 }
 
 void *createConnection(void *newsockfd){
-int n;
-void* buffer[256];
-n = read(newsockfd,buffer,255);
-int d=atoi(buffer)*5;
+	int n;
+	void* buffer[256];
+	n = read(newsockfd,buffer,255);
+	int d=atoi(buffer)*5;
 
-if (n < 0) error("ERROR reading from socket");
-printf("Message received:%d\n",d);
-sprintf(buffer, "%d", d);
-n = write(newsockfd,buffer, strlen((char *)buffer));
-if (n < 0)
-error("ERROR writing back to socket");
-
+	if (n < 0) error("ERROR reading from socket");
+	printf("Message received:%d\n",d);
+	sprintf(buffer, "%d", d);
+	n = write(newsockfd,buffer, strlen((char *)buffer));
+	if (n < 0)
+	error("ERROR writing back to socket");
 }
 
 int main(int argc, char *argv[])
 { 
-int sockfd, newsockfd, port, clilen;
+int sockfd, newsockfd, port, clilen, pid;
 struct sockaddr_in serv_addr, cli_addr;
 
 if (argc < 2)
@@ -49,25 +48,20 @@ error("ERROR binding to socket");
 listen(sockfd,2);
 clilen = sizeof(cli_addr);
 
-\
-// while( (newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen)) )
-// {
-	newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen);
-    if (newsockfd < 0) error("ERROR on accept");
-
-    // printf("Connection accepted");
-     
-    pthread_t sniffer_thread;
-     
-    if( pthread_create( &sniffer_thread , NULL ,  createConnection , (void*) newsockfd) < 0)
-    {
-        perror("could not create thread");
-        return 1;
-    }
-     
-    pthread_join( sniffer_thread , NULL);
-
-// }
+while (1) {
+ 	newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen);
+	if (newsockfd < 0) error("ERROR on accept");
+	pid = fork();
+ 	if (pid < 0)
+     	error("ERROR on fork");
+ 	if (pid == 0)  {
+     	close(sockfd);
+     	createConnection(newsockfd);
+     	exit(0);
+	 }
+ else 
+ 	close(newsockfd);
+}   /* end of while */
 return 0;
 }
 
