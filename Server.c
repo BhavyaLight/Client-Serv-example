@@ -12,7 +12,7 @@
  
  void *createConnection(void *newsockfd){
  int n;
- char buffer[256];
+ void* buffer[256];
  n = read(newsockfd,buffer,255);
  int d=atoi(buffer)*5;
  
