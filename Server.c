@@ -47,20 +47,28 @@ error("ERROR binding to socket");
 
 listen(sockfd,2);
 clilen = sizeof(cli_addr);
-
-pid = fork();
-if(pid < 0)
-	error("ERROR on fork");
-//Create 3 child processes
-if (pid==0){
-	pidd=fork();
-}
-
 newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen);
-if (newsockfd < 0) error("ERROR on accept");
-close(sockfd);
-createConnection(newsockfd);
-exit(0);
+pthread_t t1,t2,t3;
+    if( pthread_create( &t1 , NULL ,  createConnection , (void*) newsockfd) < 0)
+    {
+        perror("could not create thread 1");
+        return 1;
+    }
+    if( pthread_create( &t2 , NULL ,  createConnection , (void*) newsockfd) < 0)
+    {
+        perror("could not create thread 2");
+        return 1;
+    }
+    if( pthread_create( &t3 , NULL ,  createConnection , (void*) newsockfd) < 0)
+    {
+        perror("could not create thread 3");
+        return 1;
+    }
+    pthread_join( t1 , NULL);
+    pthread_join( t2 , NULL);
+    pthread_join( t3 , NULL);
+
+
 
 return 0;
 }
