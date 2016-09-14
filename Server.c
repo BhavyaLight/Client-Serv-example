@@ -49,7 +49,6 @@ error("ERROR binding to socket");
 listen(sockfd,2);
 clilen = sizeof(cli_addr);
 
-\
 // while( (newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen)) )
 // {
 	newsockfd = accept(sockfd,(struct sockaddr *)&cli_addr, &clilen);
